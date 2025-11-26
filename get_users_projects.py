@@ -1,23 +1,25 @@
 import requests
-from openpyxl import Workbook
+import csv
 import time
-TOKEN = "f9ebac859372c7c29789ea2f7251200c016bd218b26857aa55cdb143919f93d2"
-headers = {"Authorization": f"Bearer {TOKEN}"}
+import sys
 
-wb = Workbook()
-ws = wb.active
-ws.append(["user_login", "project_name", "status", "final_mark", "marked_at"])
+token = sys.argv[1]
+file_path = sys.argv[2]
+headers = {"Authorization": f"Bearer {token}"}
 
-with open("new_campus_42rio_users.txt") as file:
-	for line in file:
-		login, user_id = line.strip().split(",")
-		url = f"https://api.intra.42.fr/v2/users/{user_id}/projects_users?per_page=100"
-		response = requests.get(url, headers=headers).json()
-		print(f"Saving: {login} ({user_id})")
-		time.sleep(1)
-		for project in response:
-			if 21 in project.get("cursus_ids", []):
-				ws.append([login, project["project"]["name"], project["status"], project["final_mark"], project["marked_at"],])
+with open("projects_42rio.csv", "w", newline="", encoding="utf-8") as csvfile:
+	writer = csv.writer(csvfile)
+	writer.writerow(["user_login", "project_name", "status", "final_mark", "marked_at"])
 
-wb.save("projects_42rio.xlsx")
+	with open(file_path, "r") as file:
+		for line in file:
+			login, user_id = line.strip().split(",")
+			url = f"https://api.intra.42.fr/v2/users/{user_id}/projects_users?per_page=100"
+			response = requests.get(url, headers=headers).json()
+			print(f"Saving: {login} ({user_id})")
+			time.sleep(1)
+			for project in response:
+				if 21 in project.get("cursus_ids", []):
+					writer.writerow([login, project["project"]["name"], project["status"], project["final_mark"], project["marked_at"],])
+
 

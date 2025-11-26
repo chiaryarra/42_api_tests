@@ -1,0 +1,4 @@
+Collecting users that are from cursus 21 (42 cursus)...
+
+
+Finished!

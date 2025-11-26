@@ -28,7 +28,7 @@ while [ $RESULTS -gt 0 ]; do
 	fi
 
 	# Extract only the login and id
-	echo "$RESPONSE" | jq -r '.[] | "\(.login),\(.id)"' >> "campus_users.txt"
+	echo "$RESPONSE" | jq -r '.[] | "\(.login),\(.id)"'
 
 	PAGE=$((PAGE + 1))
 done

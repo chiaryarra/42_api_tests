@@ -1,7 +1,7 @@
 #! /bin/bash
 
 TOKEN=$1
-CAMPUS_USERS="campus_users.txt"
+CAMPUS_USERS=$2
 
 echo "Collecting users that are from cursus 21 (42 cursus)..."
 echo 
@@ -12,7 +12,7 @@ while read login div user_id; do
 	is_cursus_21=$(echo "$response" | jq 'any(.cursus_id == 21)')
 	sleep 1
 	if [ "$is_cursus_21" = "true" ]; then
-		echo "$login $div $user_id" >> "campus_and_cursus_users.txt"
+		echo "$login $div $user_id"
 	fi
 
 done < "$CAMPUS_USERS"
